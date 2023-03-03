@@ -24,14 +24,4 @@ function Task({id, title, time, done, updateTask, deleteTask}) {
     )
 }
 
-const taskConverter = {
-    toFirestore: (task) => {
-        return { ...task };
-    },
-    fromFirestore: (snapshot, options) => {
-        const data = snapshot.data(options);
-        return { ...data };
-    }
-};
-
-export {Task, taskConverter}
+export default Task

@@ -26,7 +26,7 @@ function TaskInput({addTask}) {
                 onClick={() => {
                     if(title === "" || time === "")
                         return
-                    addTask({id: nanoid(),title: title,time: time,done: false,})
+                    addTask({id: nanoid(), title: title, time: time, done: false,})
                     setTitle("")
                     setTime("")
                 }}

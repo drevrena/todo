@@ -1,36 +1,28 @@
 import React, {useContext, useEffect, useState} from "react";
-import { Link } from "react-router-dom";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { app } from "../firebase";
-import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import useFirebase from "../hooks/useFirebase";
+
 
 function LoginPage() {
     const [mail, setMail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState(null)
-    const {userId, setUserId} = useContext(UserContext)
+    const {userId} = useContext(UserContext)
+    const {login} = useFirebase()
     const navigate = useNavigate()
-    const auth = getAuth(app);
-
-    function login(event) {
-        event.preventDefault()
-
-        signInWithEmailAndPassword(auth, mail, password)
-            .then((userCredential) => {
-                // Signed in 
-                setUserId(userCredential.user.uid)
-            })
-            .catch((error) => {
-                setError(error)
-                // ..
-        });
-    }
 
     useEffect(() => {
         if(userId)
             navigate("/home")
     }, [userId])
+
+    function handleSubmit(event) {
+        event.preventDefault()
+        login(mail, password)
+            .catch(err => setError(err))
+    }
 
     return(
         <div className="flex flex-col justify-center min-h-screen min-w-screen bg-gradient-to-br from-cyan-400 to-blue-700 text-white text-center">
@@ -43,7 +35,7 @@ function LoginPage() {
                 error.code === "auth/wrong-password" ? "Wrong Password" : error.message
                 }
                 </p>}
-            <form className="flex flex-col items-center gap-4 mt-4" onSubmit={login}>
+            <form className="flex flex-col items-center gap-4 mt-4" onSubmit={handleSubmit}>
                 <input
                     className="w-[70%] max-w-sm py-2 px-6 rounded text-gray-600"
                     type="text"

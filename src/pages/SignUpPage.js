@@ -1,20 +1,19 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
-import { app } from "../firebase";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import useFirebase from "../hooks/useFirebase";
 
 function SignUpPage() {
     const [mail, setMail] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
     const [error, setError] = useState(null)
-    const {userId, setUserId} = useContext(UserContext)
+    const {signup} = useFirebase()
+    const {userId} = useContext(UserContext)
     const navigate = useNavigate()
-    const auth = getAuth(app);
 
-    function registerUser(event) {
+    function handleSubmit(event) {
         event.preventDefault()
         
         if(password !== confirmPassword){
@@ -22,20 +21,10 @@ function SignUpPage() {
             return
         }
 
-        createUserWithEmailAndPassword(auth, mail, password)
-            .then((userCredential) => {
-                // Signed in 
-                setUserId(userCredential.user.uid)
-            })
-            .then(() => navigate("/home"))
-            .catch((error) => {
-                setError(error)
-                // ..
-        });
+        signup(mail, password)
+            .catch(err => setError(err))
     }
 
-    //redirect to home after userId is set
-    // eslint-disable-next-line
     useEffect(() => {
         if(userId)
             navigate("/home")
@@ -52,7 +41,7 @@ function SignUpPage() {
                 error.code === "auth/wrong-password" ? "Wrong Password" : error.message
                 }
             </p>}
-            <form className="flex flex-col items-center gap-4 mt-4" onSubmit={registerUser}>
+            <form className="flex flex-col items-center gap-4 mt-4" onSubmit={handleSubmit}>
                 <input
                     className="w-[70%] max-w-sm py-2 px-6 rounded text-gray-600"
                     type="text"
