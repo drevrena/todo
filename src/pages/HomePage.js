@@ -25,9 +25,8 @@ function HomePage() {
 
     return(
         <div className="bg-gradient-to-br from-cyan-400 to-blue-700 w-full h-full min-h-screen min-w-screen">
-            <div className="flex flex-col items-center mx-[10%] lg:mx-auto py-12 max-w-[720px]">
+            <div className="flex flex-col items-center mx-[10%] lg:mx-auto py-8 max-w-[720px]">
                 <ProgressCard tasks={tasks}/>
-                <h1 className="my-8 text-3xl font-semibold border-b-2 w-full pb-4 text-gray-100">Today's Task</h1>
                 {tasksElement}
                 <TaskForm addTask={addTask} />
             </div>
